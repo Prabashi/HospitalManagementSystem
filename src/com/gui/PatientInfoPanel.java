@@ -331,7 +331,10 @@ public class PatientInfoPanel extends javax.swing.JPanel {
 
                 if (result.next()) {
                     name = result.getString("name");
-                    jComboBoxNameEdit.setSelectedItem(name);
+//                    TODO change name selected
+//                    jComboBoxNameEdit.setSelectedItem(name);
+                    jComboBoxNameEdit.setSelectedItem(name + " - " + id);
+
                 } else {
                     jComboBoxNameEdit.setSelectedIndex(-1);
                 }
@@ -365,7 +368,7 @@ public class PatientInfoPanel extends javax.swing.JPanel {
                 //if Name is selected and id is not selected
                 String nameSelected = jComboBoxNameEdit.getSelectedItem().toString();
 //                ***************************
-                String [] values = nameSelected.split(" - ");
+                String[] values = nameSelected.split(" - ");
                 name = values[0];
                 id = Integer.parseInt(values[1]);
                 setFieldValues("select * from patient where id = ?", id);
@@ -456,28 +459,19 @@ public class PatientInfoPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jButtonSearchPatientActionPerformed
 
     private void jComboBoxNameEditItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBoxNameEditItemStateChanged
-
+        resetFormEdit();
+        setFieldsEnabled(false);
+        jButtonEdit.setEnabled(false);
     }//GEN-LAST:event_jComboBoxNameEditItemStateChanged
 
     private void jComboBoxNameEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxNameEditActionPerformed
-
-        //TODO reset and disable fields if changed
-        //        resetFormEdit();
-        //        jTextFieldNameEdit.setEnabled(false);
-        //        jFormattedTextFieldAgeEdit.setEnabled(false);
-        //        jComboBoxGenderEdit.setEnabled(false);
-        //        jFormattedTextFieldPhoneNoEdit.setEnabled(false);
-        //        jTextAreaAddressEdit.setEnabled(false);
-        //        jTextFieldDiseaseEdit.setEnabled(false);
-        //        jTextAreaCommentsEdit.setEnabled(false);
-        //        jButtonEdit.setEnabled(false);
-        //        String name = jComboBoxNameEdit.get
+       
         if (jComboBoxNameEdit.getSelectedIndex() != -1) {
             String nameSelected = jComboBoxNameEdit.getSelectedItem().toString();
 //            ******************************************
-             String [] values = nameSelected.split(" - ");
-             name = values[0];
-             String id = values[1];
+            String[] values = nameSelected.split(" - ");
+            name = values[0];
+            String id = values[1];
 //             id = Integer.parseInt(values[1]);
 //                setFieldValues("select * from patient where id = ?", id);
             //        System.out.println(nameSelected);
@@ -489,12 +483,11 @@ public class PatientInfoPanel extends javax.swing.JPanel {
 
 //                if (result.next()) {
 //                    id = result.getInt("id");
-                    jFormattedTextFieldEditID.setText(id);
+            jFormattedTextFieldEditID.setText(id);
 
 //                } else {
 //                    jFormattedTextFieldEditID.setText("");
 //                }
-
 //            } catch (Exception e) {
 //                System.out.println(e);
 //            }
@@ -524,9 +517,9 @@ public class PatientInfoPanel extends javax.swing.JPanel {
         MainInterface.setDefaultLayout();
     }//GEN-LAST:event_jButtonCancelActionPerformed
 
-     public void patientEdit() {
+    public void patientEdit() {
         id = Integer.parseInt(jFormattedTextFieldEditID.getText());
-         
+
         if (jTextFieldNameEdit.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Please enter the name!");
         } else if (jFormattedTextFieldAgeEdit.getText().equals("")) {
@@ -561,7 +554,7 @@ public class PatientInfoPanel extends javax.swing.JPanel {
             }
         }
     }
-    
+
     private void setFieldValues(String query, Object val) {
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/hospital", "root", null)) {
 
@@ -598,7 +591,9 @@ public class PatientInfoPanel extends javax.swing.JPanel {
                 jTextAreaAddressEdit.setText(address);
                 jTextFieldDiseaseEdit.setText(disease);
                 jTextAreaCommentsEdit.setText(comments);
-                jComboBoxNameEdit.setSelectedItem(name);
+//              TODO Change the selected item name
+//                jComboBoxNameEdit.setSelectedItem(name);
+                jComboBoxNameEdit.setSelectedItem(name + " - " + id);
 
                 jButtonEdit.setEnabled(true);
 

@@ -37,6 +37,7 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
     private float totalPrice;
     private String status;
     private Date checkoutDate;
+    private boolean isCheckout;
 //    private int price;
 
     /**
@@ -93,6 +94,7 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
         setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Patient Checkout", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Times New Roman", 1, 18))); // NOI18N
 
         jButtonDiscard.setText("Discard Changes");
+        jButtonDiscard.setEnabled(false);
         jButtonDiscard.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonDiscardActionPerformed(evt);
@@ -179,6 +181,7 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
         jLabel17.setText("Address :");
 
         jButtonSave.setText("Save");
+        jButtonSave.setEnabled(false);
         jButtonSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSaveActionPerformed(evt);
@@ -207,15 +210,18 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
 
         jFormattedTextFieldCheckoutDate.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("yyyy/MM/dd"))));
         jFormattedTextFieldCheckoutDate.setText(dateFormat.format(new java.sql.Date(System.currentTimeMillis())));
+        jFormattedTextFieldCheckoutDate.setEnabled(false);
 
         jLabel2.setText("Total Price :");
 
         jFormattedTextFieldTotalPrice.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.00"))));
+        jFormattedTextFieldTotalPrice.setEnabled(false);
 
         jLabel3.setText("Status :");
 
         jTextAreaStatus.setColumns(20);
         jTextAreaStatus.setRows(5);
+        jTextAreaStatus.setEnabled(false);
         jScrollPane1.setViewportView(jTextAreaStatus);
 
         jButtonPrint.setText("Print");
@@ -366,22 +372,25 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jButtonCancelActionPerformed
 
     private void jComboBoxNameItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBoxNameItemStateChanged
+        resetFormEdit();
+//      if changed, remove field values
+        jFormattedTextFieldCheckoutDate.setText(dateFormat.format(new java.sql.Date(System.currentTimeMillis())));
+        jFormattedTextFieldTotalPrice.setText("");
+        jTextAreaStatus.setText("");
 
+        jButtonSave.setEnabled(false);
+        jButtonDiscard.setEnabled(false);
+
+        jFormattedTextFieldCheckoutDate.setEnabled(false);
+        jFormattedTextFieldTotalPrice.setEnabled(false);
+        jTextAreaStatus.setEnabled(false);
     }//GEN-LAST:event_jComboBoxNameItemStateChanged
 
     private void jComboBoxNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxNameActionPerformed
 
-        //TODO reset and disable fields if changed
-        //        resetFormEdit();
-        //        jTextFieldNameEdit.setEnabled(false);
-        //        jFormattedTextFieldAgeEdit.setEnabled(false);
-        //        jComboBoxGenderEdit.setEnabled(false);
-        //        jFormattedTextFieldPhoneNoEdit.setEnabled(false);
-        //        jTextAreaAddressEdit.setEnabled(false);
-        //        jTextFieldDiseaseEdit.setEnabled(false);
-        //        jTextAreaCommentsEdit.setEnabled(false);
-        //        jButtonEdit.setEnabled(false);
-        //        String name = jComboBoxNameEdit.get
+        jButtonSave.setEnabled(false);
+        jButtonDiscard.setEnabled(false);
+
         if (jComboBoxName.getSelectedIndex() != -1) {
             String nameSelected = jComboBoxName.getSelectedItem().toString();
 
@@ -405,6 +414,18 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
 
         //        TODO Fix bug: reset is done even if an arrow key is pressed
         resetFormEdit();
+//        TODO if id val changes, remove field values
+
+        jFormattedTextFieldCheckoutDate.setText(dateFormat.format(new java.sql.Date(System.currentTimeMillis())));
+        jFormattedTextFieldTotalPrice.setText("");
+        jTextAreaStatus.setText("");
+
+        jButtonSave.setEnabled(false);
+        jButtonDiscard.setEnabled(false);
+
+        jFormattedTextFieldCheckoutDate.setEnabled(false);
+        jFormattedTextFieldTotalPrice.setEnabled(false);
+        jTextAreaStatus.setEnabled(false);
 
         if (isPositiveInteger(val)) {
             id = Integer.parseInt(jFormattedTextFieldID.getText());
@@ -416,7 +437,8 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
 
                 if (result.next()) {
                     name = result.getString("name");
-                    jComboBoxName.setSelectedItem(name);
+//                    TODO change name selected
+                    jComboBoxName.setSelectedItem(name + " - " + id);
                 } else {
                     jComboBoxName.setSelectedIndex(-1);
                 }
@@ -446,7 +468,7 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
             id = Integer.parseInt(jFormattedTextFieldID.getText());
 
             try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/hospital", "root", null)) {
-                query = "Update Patient set checkout_date=?, total_price=?, status=? where id=?";
+                query = "Update Patient set checkout_date=?, total_price=?, status=?, is_checkout=? where id=?";
                 statement = connection.prepareStatement(query);
 
                 checkoutDate = dateFormat.parse(jFormattedTextFieldCheckoutDate.getText());
@@ -458,7 +480,8 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
                 statement.setDate(1, checkDate);
                 statement.setFloat(2, totalPrice);
                 statement.setString(3, status);
-                statement.setInt(4, id);
+                statement.setBoolean(4, true);
+                statement.setInt(5, id);
 
                 statement.executeUpdate();
 
@@ -466,8 +489,12 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
                 System.out.println(ex);
             }
 
+            JOptionPane.showMessageDialog(null, "Changes were successfully added !");
             //      Enable Print button
             jButtonPrint.setEnabled(true);
+            jFormattedTextFieldCheckoutDate.setEnabled(false);
+            jFormattedTextFieldTotalPrice.setEnabled(false);
+            jTextAreaStatus.setEnabled(false);
         }
 
 
@@ -477,26 +504,118 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
         if (jFormattedTextFieldID.getText().equals("")) {
             if (jComboBoxName.getSelectedIndex() == -1) {
                 jButtonSave.setEnabled(false);
+                jButtonDiscard.setEnabled(false);
+//              disable checkout fields (not essential?)
+                jFormattedTextFieldCheckoutDate.setEnabled(false);
+                jFormattedTextFieldTotalPrice.setEnabled(false);
+                jTextAreaStatus.setEnabled(false);
                 JOptionPane.showMessageDialog(null, "Enter Patient ID or Name!");
             } else {
                 //if Name is selected and id is not selected
+
                 String nameSelected = jComboBoxName.getSelectedItem().toString();
                 String[] values = nameSelected.split(" - ");
                 name = values[0];
                 id = Integer.parseInt(values[1]);
                 setFieldValues("select * from patient where id = ?", id);
 
+//                TODO if isCheckout true, keep all disabled and show db values 
+//                else
+//                TODO enable checkout fields
+                try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/hospital", "root", null)) {
+                    query = "Select * from patient where id=?";
+                    statement = connection.prepareStatement(query);
+                    statement.setInt(1, id);
+                    result = statement.executeQuery();
+//                    isCheckout = false;
+                    if (result.next()) {
+                        isCheckout = result.getBoolean("is_checkout");
+                        checkoutDate = result.getDate("checkout_date");
+                        totalPrice = result.getFloat("total_price");
+                        status = result.getString("status");
+                    }
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+                if (isCheckout) {
+                    System.out.println("true");
+                    jFormattedTextFieldCheckoutDate.setEnabled(false);
+                    jFormattedTextFieldTotalPrice.setEnabled(false);
+                    jTextAreaStatus.setEnabled(false);
+                    jButtonSave.setEnabled(false);
+                    jButtonDiscard.setEnabled(false);
+
+                    jFormattedTextFieldCheckoutDate.setText(dateFormat.format(checkoutDate));
+                    jFormattedTextFieldTotalPrice.setText(Float.toString(totalPrice));
+                    jTextAreaStatus.setText(status);
+                } else {
+                    System.out.println("false");
+
+                    jFormattedTextFieldCheckoutDate.setEnabled(true);
+                    jFormattedTextFieldTotalPrice.setEnabled(true);
+                    jTextAreaStatus.setEnabled(true);
+                    jButtonSave.setEnabled(true);
+                    jButtonDiscard.setEnabled(true);
+
+                }
+
             }
         } else {
             //if id is selected
             id = Integer.parseInt(jFormattedTextFieldID.getText());
             setFieldValues("select * from patient where id = ?", id);
+            jFormattedTextFieldCheckoutDate.setEnabled(true);
+            jFormattedTextFieldTotalPrice.setEnabled(true);
+            jTextAreaStatus.setEnabled(true);
+            jButtonSave.setEnabled(true);
+            jButtonDiscard.setEnabled(true);
+
+            try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/hospital", "root", null)) {
+                query = "Select * from patient where id=?";
+                statement = connection.prepareStatement(query);
+                statement.setInt(1, id);
+                result = statement.executeQuery();
+//                    isCheckout = false;
+                if (result.next()) {
+                    isCheckout = result.getBoolean("is_checkout");
+                    checkoutDate = result.getDate("checkout_date");
+                    totalPrice = result.getFloat("total_price");
+                    status = result.getString("status");
+                }
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+            if (isCheckout) {
+                System.out.println("true");
+                jFormattedTextFieldCheckoutDate.setEnabled(false);
+                jFormattedTextFieldTotalPrice.setEnabled(false);
+                jTextAreaStatus.setEnabled(false);
+                jButtonSave.setEnabled(false);
+                jButtonDiscard.setEnabled(false);
+
+                jFormattedTextFieldCheckoutDate.setText(dateFormat.format(checkoutDate));
+                jFormattedTextFieldTotalPrice.setText(Float.toString(totalPrice));
+                jTextAreaStatus.setText(status);
+            } else {
+                System.out.println("false");
+
+                jFormattedTextFieldCheckoutDate.setEnabled(true);
+                jFormattedTextFieldTotalPrice.setEnabled(true);
+                jTextAreaStatus.setEnabled(true);
+                jButtonSave.setEnabled(true);
+                jButtonDiscard.setEnabled(true);
+
+            }
+
         }
     }//GEN-LAST:event_jButtonSearchPatientActionPerformed
 
     private void jButtonPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPrintActionPerformed
         // TODO Print code
+//        TODO create a col in table as 'is_billed', make true if clicked
+//        TODO in 'search btn action performed', make enable if is_billed false, otherwise disable
     }//GEN-LAST:event_jButtonPrintActionPerformed
+
     private void setFieldValues(String query, Object val) {
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/hospital", "root", null)) {
 
@@ -533,7 +652,9 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
                 jTextAreaAddressEdit.setText(address);
                 jTextFieldDiseaseEdit.setText(disease);
                 jTextAreaCommentsEdit.setText(comments);
-                jComboBoxName.setSelectedItem(name);
+//                TODO Change the selected item name
+//                jComboBoxName.setSelectedItem(name);
+                jComboBoxName.setSelectedItem(name + " - " + id);
 
 //                jButtonSave.setEnabled(true);
             } else {

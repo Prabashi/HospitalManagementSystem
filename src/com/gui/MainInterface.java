@@ -269,6 +269,7 @@ public class MainInterface extends javax.swing.JFrame {
         card.show(jPanelCard, "jPanelPatientCheckout");
          patientCheckoutPanel.resetFormEdit();
          patientCheckoutPanel.resetFormCheckout();
+//       jButtonSave.setEnabled(false);
 
         patientCheckoutPanel.setJFormattedTextFieldID("");
 //        patientCheckoutPanel.setJComboBoxNameIndex(-1);

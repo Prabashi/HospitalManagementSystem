@@ -150,11 +150,11 @@ public class UserLogin extends javax.swing.JFrame {
 
             if (set.next()) {
 
-                JOptionPane.showMessageDialog(null, "Valid Login!");
+//                JOptionPane.showMessageDialog(null, "Valid Login!");
 
-//                FrameMain frameMain = new FrameMain();
-//                frameMain.setVisible(true);
-//                dispose();
+                MainInterface mainInterface = new MainInterface();
+                mainInterface.setVisible(true);
+                dispose();
             } else {
                 JOptionPane.showMessageDialog(null, "Invalid Login!");
 
