@@ -255,7 +255,6 @@ public class RoomInfoPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jComboBoxRoomTypeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBoxRoomTypeItemStateChanged
-        System.out.println("item changed");
     }//GEN-LAST:event_jComboBoxRoomTypeItemStateChanged
 
     private void jComboBoxRoomTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxRoomTypeActionPerformed
@@ -268,7 +267,6 @@ public class RoomInfoPanel extends javax.swing.JPanel {
         jCheckBoxAvailable.setSelected(true);
 
 //        jListRooms.setSelectedIndex(0);
-        System.out.println("action performed");
     }//GEN-LAST:event_jComboBoxRoomTypeActionPerformed
 
     private void addModelToJList(String item) {
@@ -278,11 +276,12 @@ public class RoomInfoPanel extends javax.swing.JPanel {
             statement.setString(1, item);
             result = statement.executeQuery();
 
+            String roomNum;
             DefaultListModel model = new DefaultListModel();
 
             while (result.next()) {
-                roomNo = result.getString("room_no");
-                model.addElement(roomNo);
+                roomNum = result.getString("room_no");
+                model.addElement(roomNum);
             }
 
             jListRooms.setModel(model);
@@ -306,6 +305,7 @@ public class RoomInfoPanel extends javax.swing.JPanel {
         jCheckBoxAvailable.setSelected(true);
 
         jButtonDiscard.setEnabled(true);
+        jButtonEdit.setEnabled(false);
 
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/hospital", "root", null)) {
             query = "Select * from room order by id desc limit 1";
@@ -385,6 +385,7 @@ public class RoomInfoPanel extends javax.swing.JPanel {
 
 //                  String item = jComboBoxRoomType.getSelectedItem().toString();
                 addModelToJList(roomType);
+                jComboBoxRoomType.setSelectedItem(roomType);
 
                 jListRooms.setSelectedValue(roomNo, true);
                 jButtonEdit.setEnabled(true);
@@ -397,7 +398,7 @@ public class RoomInfoPanel extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(null, "Please enter a unique name for Room No!");//TODO is this the correct way of doing this?
 
             } catch (Exception e) {
-                System.out.println("ex is " + e);
+                System.out.println(e);
             }
         }
 
@@ -406,7 +407,6 @@ public class RoomInfoPanel extends javax.swing.JPanel {
 
     private void jListRoomsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListRoomsValueChanged
         if (!evt.getValueIsAdjusting()) { // To perform actions when value adjusting is over
-            System.out.println(jListRooms.getSelectedIndex());
 
             try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/hospital", "root", null)) {
                 if (jListRooms.getSelectedIndex() != -1) {
@@ -457,7 +457,10 @@ public class RoomInfoPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jButtonCancelActionPerformed
 
     private void jButtonDiscardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDiscardActionPerformed
-        resetRoomInfo();
+        int dialogResult = JOptionPane.showConfirmDialog(null, "Are you sure? This will discard all the unsaved changes!");
+        if (dialogResult == JOptionPane.YES_OPTION) {
+            resetRoomInfo();
+        }
     }//GEN-LAST:event_jButtonDiscardActionPerformed
 
     public void resetRoomInfo() {
@@ -470,9 +473,10 @@ public class RoomInfoPanel extends javax.swing.JPanel {
             result = statement.executeQuery();
 
             DefaultListModel model = new DefaultListModel();
+            String roomNum;
             while (result.next()) {
-                roomNo = result.getString("room_no");
-                model.addElement(roomNo);
+                roomNum = result.getString("room_no");
+                model.addElement(roomNum);
             }
             jListRooms.setModel(model);
 
