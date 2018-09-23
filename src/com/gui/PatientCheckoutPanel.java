@@ -10,8 +10,10 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import javax.swing.JOptionPane;
 
 /**
@@ -20,6 +22,7 @@ import javax.swing.JOptionPane;
  */
 public class PatientCheckoutPanel extends javax.swing.JPanel {
 
+    private final NumberFormat format = NumberFormat.getInstance(Locale.US);
     final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
     private String query;
     private PreparedStatement statement;
@@ -34,7 +37,7 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
     private String address;
     private String disease;
     private String comments;
-    private float totalPrice;
+    private double totalPrice = 0.00;
     private String status;
     private Date checkoutDate;
     private boolean isCheckout;
@@ -474,11 +477,20 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
                 checkoutDate = dateFormat.parse(jFormattedTextFieldCheckoutDate.getText());
                 java.sql.Date checkDate = new java.sql.Date(checkoutDate.getTime());
 
-                totalPrice = Float.parseFloat(jFormattedTextFieldTotalPrice.getText());
+//                totalPrice = Float.parseFloat(jFormattedTextFieldTotalPrice.getText());
+                
+                try{
+                    Number number = format.parse(jFormattedTextFieldTotalPrice.getText());
+                    totalPrice = number.doubleValue();
+                } catch(Exception e) {
+                    System.out.println(e);
+                }
+                
                 status = jTextAreaStatus.getText();
 
                 statement.setDate(1, checkDate);
-                statement.setFloat(2, totalPrice);
+//                statement.setFloat(2, totalPrice);
+                statement.setDouble(2, totalPrice);
                 statement.setString(3, status);
                 statement.setBoolean(4, true);
                 statement.setInt(5, id);
@@ -546,7 +558,7 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
                     jButtonDiscard.setEnabled(false);
 
                     jFormattedTextFieldCheckoutDate.setText(dateFormat.format(checkoutDate));
-                    jFormattedTextFieldTotalPrice.setText(Float.toString(totalPrice));
+                    jFormattedTextFieldTotalPrice.setText(Double.toString(totalPrice));
                     jTextAreaStatus.setText(status);
                 } else {
                     System.out.println("false");
@@ -594,7 +606,7 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
                 jButtonDiscard.setEnabled(false);
 
                 jFormattedTextFieldCheckoutDate.setText(dateFormat.format(checkoutDate));
-                jFormattedTextFieldTotalPrice.setText(Float.toString(totalPrice));
+                jFormattedTextFieldTotalPrice.setText(Double.toString(totalPrice));
                 jTextAreaStatus.setText(status);
             } else {
                 System.out.println("false");

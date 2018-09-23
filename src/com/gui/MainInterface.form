@@ -3,6 +3,9 @@
 <Form version="1.9" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
+    <Property name="background" type="java.awt.Color" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+      <Connection component="Form" name="background" type="property"/>
+    </Property>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
@@ -51,7 +54,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="jButtonPatientInfo" alignment="0" max="32767" attributes="0"/>
                       <Component id="jButtonPatientCheckout" alignment="0" max="32767" attributes="0"/>
-                      <Component id="jButton4" alignment="0" max="32767" attributes="0"/>
+                      <Component id="jButtonRoomInfo" alignment="0" max="32767" attributes="0"/>
                       <Component id="jButton5" alignment="0" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="jButtonPatientReg" min="-2" pref="158" max="-2" attributes="0"/>
@@ -77,7 +80,7 @@
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="jButtonPatientCheckout" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="jButton4" min="-2" max="-2" attributes="0"/>
+                  <Component id="jButtonRoomInfo" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="jButton5" min="-2" max="-2" attributes="0"/>
                   <EmptySpace pref="238" max="32767" attributes="0"/>
@@ -116,12 +119,12 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonPatientCheckoutActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="jButton4">
+        <Component class="javax.swing.JButton" name="jButtonRoomInfo">
           <Properties>
             <Property name="text" type="java.lang.String" value="Room Information"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton4ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonRoomInfoActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JButton" name="jButton5">
