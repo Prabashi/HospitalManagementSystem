@@ -83,11 +83,9 @@ public class MainInterface extends javax.swing.JFrame {
         jPanelCard = new javax.swing.JPanel();
         jPanelDefault = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jLabelBackground = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(getBackground());
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanelMenu.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Menu", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Times New Roman", 1, 18))); // NOI18N
         jPanelMenu.setAlignmentX(0.0F);
@@ -145,12 +143,10 @@ public class MainInterface extends javax.swing.JFrame {
                     .addComponent(jButtonRoomInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanelMenuLayout.createSequentialGroup()
-                        .addComponent(jButtonPatientReg, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanelMenuLayout.createSequentialGroup()
-                        .addComponent(jButton6)
+                        .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jButton7, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE))
+                    .addComponent(jButtonPatientReg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanelMenuLayout.setVerticalGroup(
@@ -166,14 +162,12 @@ public class MainInterface extends javax.swing.JFrame {
                 .addComponent(jButtonRoomInfo)
                 .addGap(18, 18, 18)
                 .addComponent(jButton5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 238, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton6)
                     .addComponent(jButton7))
                 .addContainerGap())
         );
-
-        getContentPane().add(jPanelMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, 190, 510));
 
         jPanelCard.setOpaque(false);
         jPanelCard.setPreferredSize(new java.awt.Dimension(740, 510));
@@ -191,19 +185,39 @@ public class MainInterface extends javax.swing.JFrame {
         jPanelDefault.setLayout(jPanelDefaultLayout);
         jPanelDefaultLayout.setHorizontalGroup(
             jPanelDefaultLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 740, Short.MAX_VALUE)
+            .addGroup(jPanelDefaultLayout.createSequentialGroup()
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 747, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 23, Short.MAX_VALUE))
         );
         jPanelDefaultLayout.setVerticalGroup(
             jPanelDefaultLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 510, Short.MAX_VALUE)
+            .addGroup(jPanelDefaultLayout.createSequentialGroup()
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 506, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 64, Short.MAX_VALUE))
         );
 
         jPanelCard.add(jPanelDefault, "jPanelDefault");
 
-        getContentPane().add(jPanelCard, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 30, -1, -1));
-
-        jLabelBackground.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/bkgrnd.jpg"))); // NOI18N
-        getContentPane().add(jLabelBackground, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1000, 560));
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(jPanelMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20)
+                .addComponent(jPanelCard, javax.swing.GroupLayout.DEFAULT_SIZE, 770, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanelCard, javax.swing.GroupLayout.DEFAULT_SIZE, 570, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanelMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(29, 29, 29))))
+        );
 
         pack();
         setLocationRelativeTo(null);
@@ -211,8 +225,8 @@ public class MainInterface extends javax.swing.JFrame {
 
     private void jButtonPatientRegActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPatientRegActionPerformed
 
-        card.show(jPanelCard, "jPanelPatientReg");
-
+        card.show(jPanelCard, "jPanelPatientReg");      
+        
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/hospital", "root", null)) {
 
             query = "select * from patient order by id desc limit 1";
@@ -362,7 +376,6 @@ public class MainInterface extends javax.swing.JFrame {
     private javax.swing.JButton jButtonPatientReg;
     private javax.swing.JButton jButtonRoomInfo;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabelBackground;
     private static javax.swing.JPanel jPanelCard;
     private javax.swing.JPanel jPanelDefault;
     private javax.swing.JPanel jPanelMenu;
