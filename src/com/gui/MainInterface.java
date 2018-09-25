@@ -253,7 +253,7 @@ public class MainInterface extends javax.swing.JFrame {
 
         patientInfoPanel.setJFormattedTextFieldEditID("");
         patientInfoPanel.setJComboBoxNameEditIndex(-1);
-        patientInfoPanel.setJButtonEditEnable(false);
+        patientInfoPanel.setJButtonsEnable(false);
 
 //        jComboBoxNameEdit.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "- - Select Name - -", "m 2", "tem 3", "em 4" }));
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/hospital", "root", null)) {
