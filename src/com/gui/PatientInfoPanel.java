@@ -77,20 +77,15 @@ public class PatientInfoPanel extends javax.swing.JPanel {
         jLabel25 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
         jComboBoxGenderEdit = new javax.swing.JComboBox();
-        jLabel10 = new javax.swing.JLabel();
-        jFormattedTextFieldEditID = new javax.swing.JTextField();
         jFormattedTextFieldRegDateEdit = new javax.swing.JFormattedTextField();
         jLabel13 = new javax.swing.JLabel();
         jButtonEdit = new javax.swing.JButton();
-        jButtonSearchPatient = new javax.swing.JButton();
         jFormattedTextFieldPhoneNoEdit = new javax.swing.JFormattedTextField();
-        jLabel6 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
         jTextAreaCommentsEdit = new javax.swing.JTextArea();
         jTextFieldNameEdit = new javax.swing.JTextField();
         jLabel20 = new javax.swing.JLabel();
-        jComboBoxNameEdit = new javax.swing.JComboBox();
         jButtonCancel = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
@@ -99,6 +94,12 @@ public class PatientInfoPanel extends javax.swing.JPanel {
         jScrollPane5 = new javax.swing.JScrollPane();
         jListRooms = new javax.swing.JList();
         jComboBoxRoomType = new javax.swing.JComboBox();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel10 = new javax.swing.JLabel();
+        jFormattedTextFieldEditID = new javax.swing.JTextField();
+        jButtonSearchPatient = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        jComboBoxNameEdit = new javax.swing.JComboBox();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Patient Information", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Times New Roman", 1, 18))); // NOI18N
 
@@ -146,14 +147,6 @@ public class PatientInfoPanel extends javax.swing.JPanel {
         jComboBoxGenderEdit.setModel(new javax.swing.DefaultComboBoxModel(new String[] { " ", "Male", "Female", "Other" }));
         jComboBoxGenderEdit.setEnabled(false);
 
-        jLabel10.setText("Patient Name :");
-
-        jFormattedTextFieldEditID.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                jFormattedTextFieldEditIDKeyReleased(evt);
-            }
-        });
-
         jFormattedTextFieldRegDateEdit.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jFormattedTextFieldRegDateEdit.setEnabled(false);
         jFormattedTextFieldRegDateEdit.addActionListener(new java.awt.event.ActionListener() {
@@ -172,18 +165,9 @@ public class PatientInfoPanel extends javax.swing.JPanel {
             }
         });
 
-        jButtonSearchPatient.setText("Search");
-        jButtonSearchPatient.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSearchPatientActionPerformed(evt);
-            }
-        });
-
         jFormattedTextFieldPhoneNoEdit.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         jFormattedTextFieldPhoneNoEdit.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jFormattedTextFieldPhoneNoEdit.setEnabled(false);
-
-        jLabel6.setText("Patient ID :");
 
         jLabel17.setText("Address :");
 
@@ -199,22 +183,6 @@ public class PatientInfoPanel extends javax.swing.JPanel {
         jTextFieldNameEdit.setEnabled(false);
 
         jLabel20.setText("Disease :");
-
-        jComboBoxNameEdit.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jComboBoxNameEditItemStateChanged(evt);
-            }
-        });
-        jComboBoxNameEdit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBoxNameEditActionPerformed(evt);
-            }
-        });
-        jComboBoxNameEdit.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                jComboBoxNameEditKeyReleased(evt);
-            }
-        });
 
         jButtonCancel.setText("Cancel");
         jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
@@ -286,6 +254,71 @@ public class PatientInfoPanel extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jLabel10.setText("Patient Name :");
+
+        jFormattedTextFieldEditID.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jFormattedTextFieldEditIDKeyReleased(evt);
+            }
+        });
+
+        jButtonSearchPatient.setText("Search");
+        jButtonSearchPatient.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSearchPatientActionPerformed(evt);
+            }
+        });
+
+        jLabel6.setText("Patient ID :");
+
+        jComboBoxNameEdit.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBoxNameEditItemStateChanged(evt);
+            }
+        });
+        jComboBoxNameEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxNameEditActionPerformed(evt);
+            }
+        });
+        jComboBoxNameEdit.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jComboBoxNameEditKeyReleased(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jFormattedTextFieldEditID, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel10)
+                .addGap(18, 18, 18)
+                .addComponent(jComboBoxNameEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(36, 36, 36)
+                .addComponent(jButtonSearchPatient)
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(jFormattedTextFieldEditID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10)
+                    .addComponent(jComboBoxNameEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonSearchPatient))
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -293,16 +326,6 @@ public class PatientInfoPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jFormattedTextFieldEditID, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel10)
-                        .addGap(18, 18, 18)
-                        .addComponent(jComboBoxNameEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(36, 36, 36)
-                        .addComponent(jButtonSearchPatient))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel25)
@@ -335,20 +358,16 @@ public class PatientInfoPanel extends javax.swing.JPanel {
                                 .addGap(18, 18, 18)
                                 .addComponent(jButtonDiscardAll)
                                 .addGap(18, 18, 18)
-                                .addComponent(jButtonCancel)))))
+                                .addComponent(jButtonCancel))))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(70, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(jFormattedTextFieldEditID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel10)
-                    .addComponent(jComboBoxNameEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonSearchPatient))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(11, 11, 11)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -389,7 +408,7 @@ public class PatientInfoPanel extends javax.swing.JPanel {
                     .addComponent(jButtonSaveAllEdit)
                     .addComponent(jButtonDiscardAll)
                     .addComponent(jButtonCancel))
-                .addContainerGap(82, Short.MAX_VALUE))
+                .addContainerGap(56, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -812,6 +831,7 @@ public class PatientInfoPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JList jListRooms;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;

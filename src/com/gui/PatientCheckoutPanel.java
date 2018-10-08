@@ -14,6 +14,7 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 import javax.swing.JOptionPane;
 
 /**
@@ -28,6 +29,8 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
     private PreparedStatement statement;
     private ResultSet result;
 
+    private final double DEFAULT_CHARGES = 0.00;
+
     private Date date;
     private int id;
     private String name;
@@ -41,7 +44,14 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
     private String status;
     private Date checkoutDate;
     private boolean isCheckout;
-//    private int price;
+
+    private int roomId;
+    private String roomNo;
+    private String roomType;
+    private double roomPrice;
+
+    private int days;
+    private double totalRoomPrice;
 
     /**
      * Creates new form PatientCheckoutPanel
@@ -65,25 +75,20 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
         jLabel14 = new javax.swing.JLabel();
         jLabel25 = new javax.swing.JLabel();
         jButtonCancel = new javax.swing.JButton();
-        jComboBoxName = new javax.swing.JComboBox();
         jLabel20 = new javax.swing.JLabel();
         jTextFieldNameEdit = new javax.swing.JTextField();
         jFormattedTextFieldRegDateEdit = new javax.swing.JFormattedTextField();
         jLabel13 = new javax.swing.JLabel();
         jFormattedTextFieldAgeEdit = new javax.swing.JFormattedTextField();
-        jLabel10 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
-        jFormattedTextFieldID = new javax.swing.JTextField();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTextAreaAddressEdit = new javax.swing.JTextArea();
         jFormattedTextFieldPhoneNoEdit = new javax.swing.JFormattedTextField();
-        jLabel6 = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
         jButtonSave = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
         jTextAreaCommentsEdit = new javax.swing.JTextArea();
-        jButtonSearchPatient = new javax.swing.JButton();
         jTextFieldDiseaseEdit = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jFormattedTextFieldCheckoutDate = new javax.swing.JFormattedTextField();
@@ -94,18 +99,24 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
         jTextAreaStatus = new javax.swing.JTextArea();
         jButtonPrint = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
-        jComboBox1 = new javax.swing.JComboBox();
-        jTextField3 = new javax.swing.JTextField();
+        jComboBoxRoomType = new javax.swing.JComboBox();
+        jTextFieldDays = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        jTextFieldRoomNo = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
+        jTextFieldRoomPrice = new javax.swing.JTextField();
+        jTextFieldRoomTotalPrice = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
+        jPanel2 = new javax.swing.JPanel();
+        jButtonSearchPatient = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        jComboBoxName = new javax.swing.JComboBox();
+        jLabel10 = new javax.swing.JLabel();
+        jFormattedTextFieldID = new javax.swing.JTextField();
+        jFormattedTextFieldCharges = new javax.swing.JFormattedTextField();
 
         setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Patient Checkout", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Times New Roman", 1, 18))); // NOI18N
 
@@ -133,22 +144,6 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
             }
         });
 
-        jComboBoxName.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jComboBoxNameItemStateChanged(evt);
-            }
-        });
-        jComboBoxName.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBoxNameActionPerformed(evt);
-            }
-        });
-        jComboBoxName.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                jComboBoxNameKeyReleased(evt);
-            }
-        });
-
         jLabel20.setText("Disease :");
 
         jTextFieldNameEdit.setDisabledTextColor(new java.awt.Color(0, 0, 0));
@@ -168,15 +163,7 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
         jFormattedTextFieldAgeEdit.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jFormattedTextFieldAgeEdit.setEnabled(false);
 
-        jLabel10.setText("Patient Name :");
-
         jLabel15.setText("Gender :");
-
-        jFormattedTextFieldID.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                jFormattedTextFieldIDKeyReleased(evt);
-            }
-        });
 
         jTextAreaAddressEdit.setColumns(20);
         jTextAreaAddressEdit.setLineWrap(true);
@@ -189,8 +176,6 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
         jFormattedTextFieldPhoneNoEdit.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
         jFormattedTextFieldPhoneNoEdit.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jFormattedTextFieldPhoneNoEdit.setEnabled(false);
-
-        jLabel6.setText("Patient ID :");
 
         jLabel21.setText("Comments :");
 
@@ -212,13 +197,6 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
         jTextAreaCommentsEdit.setEnabled(false);
         jScrollPane4.setViewportView(jTextAreaCommentsEdit);
 
-        jButtonSearchPatient.setText("Search");
-        jButtonSearchPatient.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSearchPatientActionPerformed(evt);
-            }
-        });
-
         jTextFieldDiseaseEdit.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         jTextFieldDiseaseEdit.setEnabled(false);
 
@@ -236,7 +214,9 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
         jLabel3.setText("Status :");
 
         jTextAreaStatus.setColumns(20);
+        jTextAreaStatus.setLineWrap(true);
         jTextAreaStatus.setRows(5);
+        jTextAreaStatus.setWrapStyleWord(true);
         jTextAreaStatus.setEnabled(false);
         jScrollPane1.setViewportView(jTextAreaStatus);
 
@@ -250,11 +230,15 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Room Information", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP));
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBoxRoomType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Normal", "Medium", "VIP" }));
+        jComboBoxRoomType.setEnabled(false);
 
-        jTextField3.setToolTipText("");
+        jTextFieldDays.setToolTipText("");
+        jTextFieldDays.setEnabled(false);
 
         jLabel8.setText("No. of Days :");
+
+        jTextFieldRoomNo.setEnabled(false);
 
         jLabel7.setText("Price (per day) Rs :");
 
@@ -263,6 +247,10 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
         jLabel5.setText("Room Type :");
 
         jLabel4.setText("Room No :");
+
+        jTextFieldRoomPrice.setEnabled(false);
+
+        jTextFieldRoomTotalPrice.setEnabled(false);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -278,11 +266,11 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
                     .addComponent(jLabel9))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jComboBox1, 0, 168, Short.MAX_VALUE)
-                    .addComponent(jTextField3)
-                    .addComponent(jTextField4)
-                    .addComponent(jTextField1)
-                    .addComponent(jTextField2))
+                    .addComponent(jComboBoxRoomType, 0, 168, Short.MAX_VALUE)
+                    .addComponent(jTextFieldDays)
+                    .addComponent(jTextFieldRoomTotalPrice)
+                    .addComponent(jTextFieldRoomNo)
+                    .addComponent(jTextFieldRoomPrice))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -291,27 +279,94 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldRoomNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jComboBoxRoomType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldRoomPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldDays, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldRoomTotalPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
-        jLabel12.setText("Service Charges :");
+        jLabel12.setText("Charges :");
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jButtonSearchPatient.setText("Search");
+        jButtonSearchPatient.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSearchPatientActionPerformed(evt);
+            }
+        });
+
+        jLabel6.setText("Patient ID :");
+
+        jComboBoxName.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBoxNameItemStateChanged(evt);
+            }
+        });
+        jComboBoxName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxNameActionPerformed(evt);
+            }
+        });
+        jComboBoxName.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jComboBoxNameKeyReleased(evt);
+            }
+        });
+
+        jLabel10.setText("Patient Name :");
+
+        jFormattedTextFieldID.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jFormattedTextFieldIDKeyReleased(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jFormattedTextFieldID, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel10)
+                .addGap(18, 18, 18)
+                .addComponent(jComboBoxName, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(36, 36, 36)
+                .addComponent(jButtonSearchPatient)
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(jFormattedTextFieldID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10)
+                    .addComponent(jComboBoxName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonSearchPatient))
+                .addContainerGap())
+        );
+
+        jFormattedTextFieldCharges.setEnabled(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -369,34 +424,20 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(jFormattedTextFieldTotalPrice, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField5)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)))
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
+                                    .addComponent(jFormattedTextFieldCharges, javax.swing.GroupLayout.Alignment.LEADING)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(18, 18, 18)
                                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jFormattedTextFieldID, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel10)
-                        .addGap(18, 18, 18)
-                        .addComponent(jComboBoxName, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(36, 36, 36)
-                        .addComponent(jButtonSearchPatient)))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(53, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(jFormattedTextFieldID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel10)
-                    .addComponent(jComboBoxName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonSearchPatient))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(11, 11, 11)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -431,7 +472,7 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
                         .addGap(0, 10, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel12)
-                            .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jFormattedTextFieldCharges, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
@@ -455,7 +496,7 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
                                 .addComponent(jButtonCancel))
                             .addComponent(jButtonPrint)))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(34, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -474,6 +515,8 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
         resetFormEdit();
 //      if changed, remove field values
         jFormattedTextFieldCheckoutDate.setText(dateFormat.format(new java.sql.Date(System.currentTimeMillis())));
+        jFormattedTextFieldCharges.setText("");
+
         jFormattedTextFieldTotalPrice.setText("");
         jTextAreaStatus.setText("");
 
@@ -481,6 +524,7 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
         jButtonDiscard.setEnabled(false);
 
         jFormattedTextFieldCheckoutDate.setEnabled(false);
+        jFormattedTextFieldCharges.setEnabled(false);
         jFormattedTextFieldTotalPrice.setEnabled(false);
         jTextAreaStatus.setEnabled(false);
     }//GEN-LAST:event_jComboBoxNameItemStateChanged
@@ -513,9 +557,9 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
 
         //        TODO Fix bug: reset is done even if an arrow key is pressed
         resetFormEdit();
-//        TODO if id val changes, remove field values
 
         jFormattedTextFieldCheckoutDate.setText(dateFormat.format(new java.sql.Date(System.currentTimeMillis())));
+        jFormattedTextFieldCharges.setText("");
         jFormattedTextFieldTotalPrice.setText("");
         jTextAreaStatus.setText("");
 
@@ -523,6 +567,7 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
         jButtonDiscard.setEnabled(false);
 
         jFormattedTextFieldCheckoutDate.setEnabled(false);
+        jFormattedTextFieldCharges.setEnabled(false);
         jFormattedTextFieldTotalPrice.setEnabled(false);
         jTextAreaStatus.setEnabled(false);
 
@@ -536,7 +581,6 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
 
                 if (result.next()) {
                     name = result.getString("name");
-//                    TODO change name selected
                     jComboBoxName.setSelectedItem(name + " - " + id);
                 } else {
                     jComboBoxName.setSelectedIndex(-1);
@@ -574,14 +618,13 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
                 java.sql.Date checkDate = new java.sql.Date(checkoutDate.getTime());
 
 //                totalPrice = Float.parseFloat(jFormattedTextFieldTotalPrice.getText());
-                
-                try{
+                try {
                     Number number = format.parse(jFormattedTextFieldTotalPrice.getText());
                     totalPrice = number.doubleValue();
-                } catch(Exception e) {
+                } catch (Exception e) {
                     System.out.println(e);
                 }
-                
+
                 status = jTextAreaStatus.getText();
 
                 statement.setDate(1, checkDate);
@@ -601,6 +644,7 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
             //      Enable Print button
             jButtonPrint.setEnabled(true);
             jFormattedTextFieldCheckoutDate.setEnabled(false);
+            jFormattedTextFieldCharges.setEnabled(false);
             jFormattedTextFieldTotalPrice.setEnabled(false);
             jTextAreaStatus.setEnabled(false);
         }
@@ -615,21 +659,20 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
                 jButtonDiscard.setEnabled(false);
 //              disable checkout fields (not essential?)
                 jFormattedTextFieldCheckoutDate.setEnabled(false);
+                jFormattedTextFieldCharges.setEnabled(false);
                 jFormattedTextFieldTotalPrice.setEnabled(false);
                 jTextAreaStatus.setEnabled(false);
                 JOptionPane.showMessageDialog(null, "Enter Patient ID or Name!");
             } else {
                 //if Name is selected and id is not selected
 
+//                TODO change: Print btn enable/disble according to a isPrinted value set in Print interface (not based on isCheckout/pressing Print btn)
                 String nameSelected = jComboBoxName.getSelectedItem().toString();
                 String[] values = nameSelected.split(" - ");
                 name = values[0];
                 id = Integer.parseInt(values[1]);
-                setFieldValues("select * from patient where id = ?", id);
+                setFieldValues("select * from patient p inner join room r on p.room_id=r.id where p.id = ?", id);
 
-//                TODO if isCheckout true, keep all disabled and show db values 
-//                else
-//                TODO enable checkout fields
                 try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/hospital", "root", null)) {
                     query = "Select * from patient where id=?";
                     statement = connection.prepareStatement(query);
@@ -646,20 +689,20 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
                     System.out.println(e);
                 }
                 if (isCheckout) {
-                    System.out.println("true");
                     jFormattedTextFieldCheckoutDate.setEnabled(false);
+                    jFormattedTextFieldCharges.setEnabled(false);
                     jFormattedTextFieldTotalPrice.setEnabled(false);
                     jTextAreaStatus.setEnabled(false);
                     jButtonSave.setEnabled(false);
                     jButtonDiscard.setEnabled(false);
 
+//                    TODO set jTextFieldCharges text
                     jFormattedTextFieldCheckoutDate.setText(dateFormat.format(checkoutDate));
                     jFormattedTextFieldTotalPrice.setText(Double.toString(totalPrice));
                     jTextAreaStatus.setText(status);
                 } else {
-                    System.out.println("false");
-
-                    jFormattedTextFieldCheckoutDate.setEnabled(true);
+//                    jFormattedTextFieldCheckoutDate.setEnabled(true);
+                    jFormattedTextFieldCharges.setEnabled(true);
                     jFormattedTextFieldTotalPrice.setEnabled(true);
                     jTextAreaStatus.setEnabled(true);
                     jButtonSave.setEnabled(true);
@@ -671,8 +714,10 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
         } else {
             //if id is selected
             id = Integer.parseInt(jFormattedTextFieldID.getText());
-            setFieldValues("select * from patient where id = ?", id);
-            jFormattedTextFieldCheckoutDate.setEnabled(true);
+//            setFieldValues("select * from patient where id = ?", id);
+            setFieldValues("select * from patient p inner join room r on p.room_id=r.id where p.id = ?", id);
+//            jFormattedTextFieldCheckoutDate.setEnabled(true);
+            jFormattedTextFieldCharges.setEnabled(true);
             jFormattedTextFieldTotalPrice.setEnabled(true);
             jTextAreaStatus.setEnabled(true);
             jButtonSave.setEnabled(true);
@@ -696,18 +741,21 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
             if (isCheckout) {
                 System.out.println("true");
                 jFormattedTextFieldCheckoutDate.setEnabled(false);
+                jFormattedTextFieldCharges.setEnabled(false);
                 jFormattedTextFieldTotalPrice.setEnabled(false);
                 jTextAreaStatus.setEnabled(false);
                 jButtonSave.setEnabled(false);
                 jButtonDiscard.setEnabled(false);
 
+                //                    TODO set jTextFieldCharges text
                 jFormattedTextFieldCheckoutDate.setText(dateFormat.format(checkoutDate));
                 jFormattedTextFieldTotalPrice.setText(Double.toString(totalPrice));
                 jTextAreaStatus.setText(status);
             } else {
                 System.out.println("false");
 
-                jFormattedTextFieldCheckoutDate.setEnabled(true);
+//                jFormattedTextFieldCheckoutDate.setEnabled(true);
+                jFormattedTextFieldCharges.setEnabled(true);
                 jFormattedTextFieldTotalPrice.setEnabled(true);
                 jTextAreaStatus.setEnabled(true);
                 jButtonSave.setEnabled(true);
@@ -720,7 +768,7 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
 
     private void jButtonPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPrintActionPerformed
         // TODO Print code
-//        TODO create a col in table as 'is_billed', make true if clicked
+//        TODO create a col in table as 'is_billed', make true if clicked(if clicked Print in the 'Print interface')
 //        TODO in 'search btn action performed', make enable if is_billed false, otherwise disable
     }//GEN-LAST:event_jButtonPrintActionPerformed
 
@@ -751,6 +799,18 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
                 disease = result.getString("disease");
                 comments = result.getString("comments");
 
+                roomNo = result.getString("room_no");
+                roomType = result.getString("room_type");
+                roomPrice = result.getDouble("price");
+
+                checkoutDate = new Date(System.currentTimeMillis());
+                long diffInMillies = checkoutDate.getTime() - date.getTime();
+                days = (int) TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS) + 1;
+
+//                days = 2;
+                totalRoomPrice = days * roomPrice;
+//                totalPrice = totalRoomPrice + charge;
+
                 jFormattedTextFieldID.setText(Integer.toString(id));
                 jFormattedTextFieldRegDateEdit.setText(dateFormat.format(date));
                 jTextFieldNameEdit.setText(name);
@@ -760,9 +820,18 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
                 jTextAreaAddressEdit.setText(address);
                 jTextFieldDiseaseEdit.setText(disease);
                 jTextAreaCommentsEdit.setText(comments);
-//                TODO Change the selected item name
-//                jComboBoxName.setSelectedItem(name);
+
                 jComboBoxName.setSelectedItem(name + " - " + id);
+
+                jTextFieldRoomNo.setText(roomNo);
+                jComboBoxRoomType.setSelectedItem(roomType);
+                jTextFieldRoomPrice.setText(Double.toString(roomPrice));
+
+                jTextFieldDays.setText(Integer.toString(days));
+                jTextFieldRoomTotalPrice.setText(Double.toString(totalRoomPrice));
+
+                //                    TODO set jTextFieldCharges text
+                jFormattedTextFieldTotalPrice.setText(Double.toString(totalPrice));
 
 //                jButtonSave.setEnabled(true);
             } else {
@@ -796,7 +865,9 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
     }
 
     public void resetFormCheckout() {
-        jFormattedTextFieldCheckoutDate.setText(dateFormat.format(new java.sql.Date(System.currentTimeMillis())));
+//        jFormattedTextFieldCheckoutDate.setText(dateFormat.format(new java.sql.Date(System.currentTimeMillis())));
+        jFormattedTextFieldCharges.setText(Double.toString(DEFAULT_CHARGES));
+        jFormattedTextFieldCharges.setText("");
         jFormattedTextFieldTotalPrice.setText("");
         jTextAreaStatus.setText("");
 
@@ -811,6 +882,12 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
         jTextAreaAddressEdit.setText("");
         jTextFieldDiseaseEdit.setText("");
         jTextAreaCommentsEdit.setText("");
+
+        jTextFieldRoomNo.setText("");
+        jComboBoxRoomType.setSelectedIndex(0);
+        jTextFieldRoomPrice.setText("");
+        jTextFieldDays.setText("");
+        jTextFieldRoomTotalPrice.setText("");
 //        jComboBoxNameEdit.setSelectedItem(name);
     }
 
@@ -833,10 +910,11 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
     private javax.swing.JButton jButtonPrint;
     private javax.swing.JButton jButtonSave;
     private javax.swing.JButton jButtonSearchPatient;
-    private javax.swing.JComboBox jComboBox1;
     private javax.swing.JComboBox jComboBoxGenderEdit;
     private javax.swing.JComboBox jComboBoxName;
+    private javax.swing.JComboBox jComboBoxRoomType;
     private javax.swing.JFormattedTextField jFormattedTextFieldAgeEdit;
+    private javax.swing.JFormattedTextField jFormattedTextFieldCharges;
     private javax.swing.JFormattedTextField jFormattedTextFieldCheckoutDate;
     private javax.swing.JTextField jFormattedTextFieldID;
     private javax.swing.JFormattedTextField jFormattedTextFieldPhoneNoEdit;
@@ -862,18 +940,18 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTextArea jTextAreaAddressEdit;
     private javax.swing.JTextArea jTextAreaCommentsEdit;
     private javax.swing.JTextArea jTextAreaStatus;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
+    private javax.swing.JTextField jTextFieldDays;
     private javax.swing.JTextField jTextFieldDiseaseEdit;
     private javax.swing.JTextField jTextFieldNameEdit;
+    private javax.swing.JTextField jTextFieldRoomNo;
+    private javax.swing.JTextField jTextFieldRoomPrice;
+    private javax.swing.JTextField jTextFieldRoomTotalPrice;
     // End of variables declaration//GEN-END:variables
 }
