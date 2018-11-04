@@ -29,8 +29,7 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
     private PreparedStatement statement;
     private ResultSet result;
 
-    private final double DEFAULT_CHARGES = 0.00;
-
+//    private final double DEFAULT_CHARGES = 0.00;
     private Date date;
     private int id;
     private String name;
@@ -49,6 +48,7 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
     private String roomNo;
     private String roomType;
     private double roomPrice;
+    private double charges;
 
     private int days;
     private double totalRoomPrice;
@@ -366,7 +366,18 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
+        jFormattedTextFieldCharges.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.00"))));
         jFormattedTextFieldCharges.setEnabled(false);
+        jFormattedTextFieldCharges.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jFormattedTextFieldChargesActionPerformed(evt);
+            }
+        });
+        jFormattedTextFieldCharges.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jFormattedTextFieldChargesFocusLost(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -607,11 +618,11 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Enter the Status !");
 
         } else {
-//           TODO Save new fields' value to the database 
+
             id = Integer.parseInt(jFormattedTextFieldID.getText());
 
             try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/hospital", "root", null)) {
-                query = "Update Patient set checkout_date=?, total_price=?, status=?, is_checkout=? where id=?";
+                query = "Update Patient set checkout_date=?, total_price=?, status=?, is_checkout=?, charges=? where id=?";
                 statement = connection.prepareStatement(query);
 
                 checkoutDate = dateFormat.parse(jFormattedTextFieldCheckoutDate.getText());
@@ -621,6 +632,7 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
                 try {
                     Number number = format.parse(jFormattedTextFieldTotalPrice.getText());
                     totalPrice = number.doubleValue();
+                    charges = format.parse(jFormattedTextFieldCharges.getText()).doubleValue();
                 } catch (Exception e) {
                     System.out.println(e);
                 }
@@ -628,11 +640,11 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
                 status = jTextAreaStatus.getText();
 
                 statement.setDate(1, checkDate);
-//                statement.setFloat(2, totalPrice);
                 statement.setDouble(2, totalPrice);
                 statement.setString(3, status);
                 statement.setBoolean(4, true);
-                statement.setInt(5, id);
+                statement.setDouble(5, charges);
+                statement.setInt(6, id);
 
                 statement.executeUpdate();
 
@@ -684,6 +696,7 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
                         checkoutDate = result.getDate("checkout_date");
                         totalPrice = result.getFloat("total_price");
                         status = result.getString("status");
+                        charges = result.getFloat("charges");
                     }
                 } catch (Exception e) {
                     System.out.println(e);
@@ -696,7 +709,7 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
                     jButtonSave.setEnabled(false);
                     jButtonDiscard.setEnabled(false);
 
-//                    TODO set jTextFieldCharges text
+                    jFormattedTextFieldCharges.setText(Double.toString(charges));
                     jFormattedTextFieldCheckoutDate.setText(dateFormat.format(checkoutDate));
                     jFormattedTextFieldTotalPrice.setText(Double.toString(totalPrice));
                     jTextAreaStatus.setText(status);
@@ -734,6 +747,7 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
                     checkoutDate = result.getDate("checkout_date");
                     totalPrice = result.getFloat("total_price");
                     status = result.getString("status");
+                    charges = result.getFloat("charges");
                 }
             } catch (Exception e) {
                 System.out.println(e);
@@ -747,7 +761,7 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
                 jButtonSave.setEnabled(false);
                 jButtonDiscard.setEnabled(false);
 
-                //                    TODO set jTextFieldCharges text
+                jFormattedTextFieldCharges.setText(Double.toString(charges));
                 jFormattedTextFieldCheckoutDate.setText(dateFormat.format(checkoutDate));
                 jFormattedTextFieldTotalPrice.setText(Double.toString(totalPrice));
                 jTextAreaStatus.setText(status);
@@ -771,6 +785,30 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
 //        TODO create a col in table as 'is_billed', make true if clicked(if clicked Print in the 'Print interface')
 //        TODO in 'search btn action performed', make enable if is_billed false, otherwise disable
     }//GEN-LAST:event_jButtonPrintActionPerformed
+
+    private void jFormattedTextFieldChargesFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jFormattedTextFieldChargesFocusLost
+//      TODO bud fix: remove try-catch, instead handle jFormattedTextFieldCharges to enter only integer/double (it doesn't validate as a formatted field,coz of this FocusLost)
+//TODO Focus subsystems to validate input (in bookmarks)
+        try {
+            if (jFormattedTextFieldCharges.getText().equals("")) {
+                jFormattedTextFieldTotalPrice.setText("");
+
+            } else {
+                charges = Double.parseDouble(jFormattedTextFieldCharges.getText());
+                double roomCharges = Double.parseDouble(jTextFieldRoomTotalPrice.getText());
+                //            TODO change format to 45,678.00 for Total Price
+                String totalCharges = Double.toString(charges + roomCharges);
+                jFormattedTextFieldTotalPrice.setText(totalCharges);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+    }//GEN-LAST:event_jFormattedTextFieldChargesFocusLost
+
+    private void jFormattedTextFieldChargesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFormattedTextFieldChargesActionPerformed
+
+    }//GEN-LAST:event_jFormattedTextFieldChargesActionPerformed
 
     private void setFieldValues(String query, Object val) {
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/hospital", "root", null)) {
@@ -802,6 +840,7 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
                 roomNo = result.getString("room_no");
                 roomType = result.getString("room_type");
                 roomPrice = result.getDouble("price");
+                charges = result.getDouble("charges");
 
                 checkoutDate = new Date(System.currentTimeMillis());
                 long diffInMillies = checkoutDate.getTime() - date.getTime();
@@ -822,7 +861,6 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
                 jTextAreaCommentsEdit.setText(comments);
 
                 jComboBoxName.setSelectedItem(name + " - " + id);
-
                 jTextFieldRoomNo.setText(roomNo);
                 jComboBoxRoomType.setSelectedItem(roomType);
                 jTextFieldRoomPrice.setText(Double.toString(roomPrice));
@@ -830,7 +868,7 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
                 jTextFieldDays.setText(Integer.toString(days));
                 jTextFieldRoomTotalPrice.setText(Double.toString(totalRoomPrice));
 
-                //                    TODO set jTextFieldCharges text
+                jFormattedTextFieldCharges.setText(Double.toString(charges));
                 jFormattedTextFieldTotalPrice.setText(Double.toString(totalPrice));
 
 //                jButtonSave.setEnabled(true);
@@ -866,7 +904,7 @@ public class PatientCheckoutPanel extends javax.swing.JPanel {
 
     public void resetFormCheckout() {
 //        jFormattedTextFieldCheckoutDate.setText(dateFormat.format(new java.sql.Date(System.currentTimeMillis())));
-        jFormattedTextFieldCharges.setText(Double.toString(DEFAULT_CHARGES));
+//        jFormattedTextFieldCharges.setText(Double.toString(DEFAULT_CHARGES));
         jFormattedTextFieldCharges.setText("");
         jFormattedTextFieldTotalPrice.setText("");
         jTextAreaStatus.setText("");
